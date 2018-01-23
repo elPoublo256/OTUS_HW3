@@ -1,45 +1,40 @@
 #pragma once
 
 using namespace std;
-
-template<class T, int size=1>
-class my_alloc
+template <class T, int size_mem=10>
+class map_alloc
 {
-privare:
-int mem_size;
-T* mem_spase;
 public:
-
-using value_tyoe = T;
-my_alloc(){
-mem_size=size;
- }
-~my_alloc(){}
- 
-T* allocate(std::size_t n);
-void deallocate(T* p, std::size_t n);
-
-template <typename U, typename .. Args>
-void construct(T* p, Args&& ... args)
-{new((void *)p) U(std::forward<Args>(args) ...);}
-void destroy(T* p){p->~T()}
-
-
-
-
+ typedef T value_type;
+ typedef T* pointer;
+ typedef T& reference;
+ typedef const T* const_pointer;
+ typedef const T& const_reference;
+public:
+ map_alloc();
+ ~map_alloc(){free(main_pointer_v);}
+ T* allocate(int n);
+ void deallocate(T* p, std::size_t n);
+ void construct(T* p, const T& val){new((void *)p) T(val);}
+ void distroy(T* p){((T*)p)->~T();}
+private:
+ void* main_pointer_v;
+ T* main_pointer;
+ T* move_pointer;
 };
-template <class T>
-T* my_alloc::allocate(std::size_t n)
-{
- auto p=std::malloc(n*sizeof(T));
- if(!p)
-   throw std::bad_alloc();
-return reinterpret_cast<T *>(p);
-}
 
-template <class T>
-void my_alloc::deallocate(T* p,std::size_t n)
+ template <class T, int size_mem>                           
+ map_alloc<T, size_mem>::map_alloc()
 {
-std::free(p);
+ main_pointer_v=malloc(size_mem*sizeof(T));
+ main_pointer=reinterpret_cast<T *>(main_pointer_v);
+ move_pointer=main_pointer;
 }
-
+                      
+template <class T, int size_mem>
+T* map_alloc<T, size_mem>::allocate(int n)
+{
+ auto p=move_pointer;
+ move_pointer+=n;
+return p;
+}
