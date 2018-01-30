@@ -17,7 +17,12 @@ public:
 	my_iterator(const my_iterator &copy){p=copy.p; next=copy.next; back=copy.back;}
 	my_iterator operator ++ (){auto it=&next;return it;}
 	my_iterator operator -- (){auto it=&next;return it;}
-	bool operator == (const my_iterator &it){return p==it.p;}
+	bool operator == (const my_iterator &it)
+	{return (p==it.p||next==it.next||back==it.back);}
+
+	bool operator != (const my_iterator &it)
+	{return !(p==it.p||next==it.next||back==it.back);}
+
 	T* &operator * () {return p;}
 };
 private:
