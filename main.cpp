@@ -35,7 +35,7 @@ test_map(std_map);
 std::vector<int, map_alloc<int> > vec;
 vec.push_back(1);
 vec.push_back(1);
-//std::map<int,int,std::less<int>, map_alloc<std::pair<const int, int> > > my_map;
+std::map<int,int, map_alloc<std::pair<const int, int> > > my_map;
 //test_map(my_map);
 my_list<int> l;
 l.push_back(1);
