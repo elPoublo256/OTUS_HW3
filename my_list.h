@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 #include <iterator>
-template <class T, class Alloc=std::allocator<T>>
+template <class T, class Alloc=std::allocator<T> >
 class my_list
 {
 
@@ -9,14 +9,20 @@ public:
  class my_iterator : public std::iterator<std::forward_iterator_tag,T>
  {
    public:
+		typedef my_iterator self_type;
+                typedef T value_type;
+                typedef T& reference;
+                typedef T* pointer;
+                typedef std::forward_iterator_tag iterator_category;
+                typedef int difference_type;
 	T* p;
         my_iterator* next;
 	my_iterator* back;
 	my_iterator(){p=NULL; next=NULL; back=NULL;}
 	my_iterator(my_iterator* n, my_iterator* b, T* prt){next=n; back=b; p=prt;}
 	my_iterator(const my_iterator &copy){p=copy.p; next=copy.next; back=copy.back;}
-	my_iterator operator ++ (){auto it=&next;return it;}
-	my_iterator operator -- (){auto it=&next;return it;}
+	my_iterator operator ++ (){this=next; return this;}
+	my_iterator operator -- (){this=back; return this;}
 	bool operator == (const my_iterator &it)
 	{return (p==it.p||next==it.next||back==it.back);}
 
@@ -107,7 +113,7 @@ if(is_empty())
 	}
 else
 	{
-		decltype(begin()) it;
+		my_iterator it;
 		it.p=prt;
 		it.next=&bbegin;
 		bbegin.back=&it;
