@@ -86,40 +86,29 @@ eend=copy.end();
 template <class T, class Alloc>
 void my_list<T, Alloc>::push_back(const T &val)
 {
-if(!is_empty())
-	{
-		my_iterator it;
-		it.p=alloc.allocate(1);
-		alloc.construct(it.p,val);
-		it.next=&eend;
-		(eend.back)->next=&it;
-		eend.back=&it;
-	}
-else{
-	push_front(val);
-	}
-ssize++;
+  T* prt=alloc.allocate(1);
+  alloc.construct(prt,val);
+  auto new_it=new my_iterator();
+  new_it->p=prt;
+  new_it->next=&eend;
+  new_it->back=eend.back;
+  eend.back->next=new_it;
+  eend.back=new_it;
+  ssize++;
 }
 
 template <class T, class Alloc>
 void my_list<T, Alloc>::push_front(const T &val)
 {
-T* prt=alloc.allocate(1);
-alloc.construct(prt,val); ssize++;
-
-if(is_empty())
-	{
-		bbegin.p=prt;		
-	}
-else
-	{
-		my_iterator it;
-		it.p=prt;
-		it.next=&bbegin;
-		bbegin.back=&it;
-		bbegin =it;
-	}
-ssize++;
+  T* prt=alloc.allocate(1);
+  alloc.construct(prt,val);
+  my_iterator new_it;
+  new_it.p=prt;
+  bbegin.back=&new_it;
+  new_it.next=&bbegin;
+  bbegin=new_it;
+  
+  ssize++;
 }
 
 template <class T, class Alloc>

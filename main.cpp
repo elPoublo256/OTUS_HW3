@@ -38,7 +38,10 @@ vec.push_back(1);
 std::map<int,int, map_alloc<std::pair<const int, int> > > my_map;
 //test_map(my_map);
 my_list<int> l;
-l.push_back(1);
+for(int i=0;i<10;i++)
+{
+  l.push_back(i);
+}
 return 0;
 
 }
